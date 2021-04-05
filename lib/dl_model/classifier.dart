@@ -1,8 +1,10 @@
 import 'dart:io' as io;
 import 'dart:typed_data';
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as img;
 import 'package:tflite_flutter/tflite_flutter.dart';
+import 'dart:ui' as ui;
 
 class Classifier {
   Classifier();
@@ -12,6 +14,15 @@ class Classifier {
     img.Image imageTemp = img.decodeImage(_file.readAsBytesSync());
     img.Image resizedImg = img.copyResize(imageTemp, height: 28, width: 28);
     var imgBytes = resizedImg.getBytes();
+    var imgAsList = imgBytes.buffer.asUint8List();
+
+    return getPred(imgAsList);
+  }
+
+  classifyDrawing(List<Offset> points) async {
+    final picture = toPicture(points);
+    final image = await picture.toImage(28, 28);
+    ByteData imgBytes = await image.toByteData();
     var imgAsList = imgBytes.buffer.asUint8List();
 
     return getPred(imgAsList);
@@ -51,5 +62,26 @@ class Classifier {
     }
 
     return digitPred;
+  }
+
+  ui.Picture toPicture(List<Offset> points) {
+    final _whitePaint = Paint()
+      ..strokeCap = StrokeCap.round
+      ..color = Colors.white
+      ..strokeWidth = 16.0;
+    
+    final _bgPaint = Paint()..color = Colors.black;
+    final _canvasCullRect = Rect.fromPoints(Offset(0, 0), Offset(28, 28));
+    final recorder = ui.PictureRecorder();
+    final canvas = Canvas(recorder, _canvasCullRect)..scale(28 / 300);
+
+    canvas.drawRect(Rect.fromLTWH(0, 0, 28, 28), _bgPaint);
+    for (int i = 0; i < points.length; i++) {
+      if (points[i] != null && points[i+1] != null) {
+        canvas.drawLine(points[i], points[i+1], _whitePaint);
+      }
+    }
+
+    return recorder.endRecording();
   }
 }

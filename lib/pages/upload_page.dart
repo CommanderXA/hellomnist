@@ -16,6 +16,15 @@ class _UploadImageState extends State<UploadImage> {
   Classifier classifier = Classifier();
   PickedFile image;
   int digit = -1;
+
+  void openImg() async {
+    image = await picker.getImage(source: ImageSource.gallery);
+    if (image != null) {
+      digit = await classifier.classifyImage(image);
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,11 +34,7 @@ class _UploadImageState extends State<UploadImage> {
           FluentIcons.image_add_24_regular,
           color: Colors.white,
         ),
-        onPressed: () async {
-          image = await picker.getImage(source: ImageSource.gallery);
-          digit = await classifier.classifyImage(image);
-          setState(() {});
-        },
+        onPressed: openImg,
       ),
       body: Padding(
         padding:
@@ -52,14 +57,11 @@ class _UploadImageState extends State<UploadImage> {
             SizedBox(
               height: getProportionateScreenHeight(20),
             ),
-            SizedBox(
-              height: getProportionateScreenHeight(20),
-            ),
             digit == -1
                 ? InkWell(
                     splashColor: Colors.transparent,
                     highlightColor: Colors.transparent,
-                    onTap: () {},
+                    onTap: openImg,
                     child: Column(
                       children: [
                         Icon(
@@ -93,7 +95,9 @@ class _UploadImageState extends State<UploadImage> {
                         height: getProportionateScreenHeight(300),
                         width: getProportionateScreenHeight(300),
                       ),
-                      Divider(color: Colors.grey,),
+                      Divider(
+                        color: Colors.grey,
+                      ),
                       SizedBox(
                         height: getProportionateScreenHeight(20),
                       ),

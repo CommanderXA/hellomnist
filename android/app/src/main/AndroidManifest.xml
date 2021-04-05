@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.hellomnist">
    <application
-        android:label="hellomnist"
+        android:label="Digit Recognizer"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

@@ -1,6 +1,7 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hellomnist/pages/drawing_page.dart';
 import 'package:hellomnist/pages/upload_page.dart';
 import 'package:hellomnist/size_config.dart';
 
@@ -31,7 +32,7 @@ class _HomeState extends State<Home> {
   int currentIndex = 0;
   List tabs = [
     UploadImage(),
-    Center(child: Text("Drawing page"))
+    DrawPage(),
   ];
   @override
   Widget build(BuildContext context) {
